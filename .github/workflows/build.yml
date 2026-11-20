@@ -12,16 +12,6 @@ jobs:
         node-version: [16.x]
 
     steps:
-      - name: Check workshop token access
-        env:
-          GITHUB_TOKEN: ${{ secrets.WORKSHOP6_GITHUB_TOKEN }}
-        run: |
-          set -eu
-          api_status=$(curl --silent --show-error --output /dev/null --write-out "%{http_code}" --header "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/user)
-          repo_status=$(curl --silent --show-error --output /dev/null --write-out "%{http_code}" --header "Authorization: Bearer $GITHUB_TOKEN" "https://api.github.com/repos/$GITHUB_REPOSITORY")
-          git_status=$(curl --silent --show-error --output /dev/null --write-out "%{http_code}" --user "x-access-token:$GITHUB_TOKEN" "https://github.com/$GITHUB_REPOSITORY.git/info/refs?service=git-upload-pack")
-          echo "GitHub authentication HTTP $api_status, repository HTTP $repo_status, Git endpoint HTTP $git_status"
-          test "$api_status" = 200 && test "$repo_status" = 200 && test "$git_status" = 200
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.WORKSHOP6_GITHUB_TOKEN }}
